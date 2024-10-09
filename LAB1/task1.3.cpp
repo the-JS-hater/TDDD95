@@ -1,47 +1,55 @@
 // https://en.wikipedia.org/wiki/Longest_increasing_subsequence
+// algortihm is O(n log n)
 
 #include <vector>
 
+
 std::vector<int> lis(std::vector<int> input){
-	int pred_indices[input.size()];
-	int end_indices[input.size() + 1];
+	// Memory complexity is O(3N) since it needs two additional arrays
+	int predIdx[input.size()];
+	int minEndIdx[input.size() + 1];
 
-	end_indices[0] = -1;
+	minEndIdx[0] = -1;
 
-	int longest_seq_length = 0;
-
+	int longestSeqLen = 0;
+	
+	// Iterate over the entire input O(n)
 	for (int i = 0; i < input.size(); i++){
-		int lo = 1;
-		int hi = longest_seq_length + 1;
+		int lowerBound = 1;
+		int higherBound = longestSeqLen + 1;
+		
+		// Iterate over a subset of the input, which gets smaller
+		// each iteration, hence O(n log n), when combined with
+		// the outer for-loop
+		while (lowerBound < higherBound) {
+			int mid = lowerBound + int((higherBound- lowerBound)/2);
 
-		while (lo < hi) {
-			int mid = lo + int((hi - lo)/2);
-
-			if (input[end_indices[mid]] >= input[i]){
-				hi = mid;
+			if (input[minEndIdx[mid]] >= input[i]){
+				higherBound = mid;
 			} else {
-				lo = mid + 1;
+				lowerBound = mid + 1;
 			}
 		}
 
-		int newL = lo;
-		pred_indices[i] = end_indices[newL - 1];
-		end_indices[newL] = i;
+		int newLen = lowerBound;
+		predIdx[i] = minEndIdx[newLen - 1];
+		minEndIdx[newLen] = i;
 
-		if (newL > longest_seq_length){
-			longest_seq_length = newL;
+		if (newLen > longestSeqLen){
+			longestSeqLen = newLen;
 		}
 	}
 
-	int solution[longest_seq_length];
-	int temp_i = end_indices[longest_seq_length];
+	int solution[longestSeqLen];
+	int i = minEndIdx[longestSeqLen];
 
-	for (int j = longest_seq_length - 1; j >= 0; j--) {
-		solution[j] = input[temp_i];
-		temp_i = pred_indices[temp_i];
+	for (int j = longestSeqLen - 1; j >= 0; j--) {
+		solution[j] = input[i];
+		i = predIdx[i];
 	}
-	int solution_size = sizeof(solution) / sizeof(solution[0]);
 
-	std::vector<int> converted_solution(solution, solution + solution_size);
-	return converted_solution;
+	// One would imagine converting between int[] and std::vec would be simpler...
+	int solutionSize = sizeof(solution) / sizeof(solution[0]);
+	std::vector<int> convertedSolution(solution, solution + solutionSize);
+	return convertedSolution;
 }
