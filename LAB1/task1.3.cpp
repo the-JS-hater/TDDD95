@@ -1,5 +1,4 @@
 // https://en.wikipedia.org/wiki/Longest_increasing_subsequence
-// algortihm is O(n log n)
 
 #include <vector>
 
@@ -10,7 +9,6 @@ std::vector<int> lis(std::vector<int> input){
 	int minEndIdx[input.size() + 1];
 
 	minEndIdx[0] = -1;
-
 	int longestSeqLen = 0;
 	
 	// Iterate over the entire input O(n)
@@ -42,14 +40,18 @@ std::vector<int> lis(std::vector<int> input){
 
 	int solution[longestSeqLen];
 	int i = minEndIdx[longestSeqLen];
-
+	
+	// Linear time complexity relative to the longest
+	// found increasing sequence. Not relevant for
+	// overall time complexity
 	for (int j = longestSeqLen - 1; j >= 0; j--) {
 		solution[j] = input[i];
 		i = predIdx[i];
 	}
 
-	// One would imagine converting between int[] and std::vec would be simpler...
+	// One would imagine converting between int[] and std::vec<int> would be simpler...
 	int solutionSize = sizeof(solution) / sizeof(solution[0]);
 	std::vector<int> convertedSolution(solution, solution + solutionSize);
+	
 	return convertedSolution;
 }

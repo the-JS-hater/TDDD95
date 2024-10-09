@@ -1,4 +1,4 @@
-// NOTE: Recommended time complexity: O(n log n), where n is the number of intervals.
+// https://en.wikipedia.org/wiki/Interval_scheduling
 
 #include <vector>
 #include <algorithm>
