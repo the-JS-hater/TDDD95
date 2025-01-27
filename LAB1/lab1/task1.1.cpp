@@ -1,17 +1,22 @@
-// https://en.wikipedia.org/wiki/Interval_scheduling
-
+#include <iostream>
 #include <vector>
 #include <algorithm>
+
+using std::cin;
+using std::cout;
+using std::endl;
+
 
 struct Interval {
 	double start;
 	double end;
-	int index; //might have to change depending on input
+	int index;
+
+	Interval(double start, double end, int index) : start{start}, end{end}, index{index} {}
 };
 
 
-// Custom comparison function to be used to sort intervals by
-// starting points
+// Custom comparison function to be used to sort intervals by starting points
 bool cmp_intervals(const Interval& a, const Interval& b) {
 	if (a.start == b.start) {
 		return a.end < b.end;
@@ -23,12 +28,11 @@ bool cmp_intervals(const Interval& a, const Interval& b) {
 
 std::vector<int> cover(Interval interval, std::vector<Interval> intervals) {
 	std::vector<int> indices = {};
-	
+
 	//Sort the intervals by their starting points.
 	//O(n log n) according to cpprefrence website
 	std::sort(intervals.begin(), intervals.end(), cmp_intervals);
 	
-  
 	//until we've covered the entire goal interval the list of intervals we need to
 	//iterate over in the inner loop gets smaller for each iteration of the outer loop. 
 	//hence the following section(the nested while loops) should be	O(n log n)
@@ -62,6 +66,39 @@ std::vector<int> cover(Interval interval, std::vector<Interval> intervals) {
 		indices.push_back(bestIndex);
 		current_right = farthest_right;
 	}
-
 	return indices;
 };
+
+
+int main() {
+
+	while (cin.peek() != EOF)
+	{	
+		double a,b;
+		int n;
+		cin >> a;
+		cin >> b;
+		Interval target = Interval(a, b, 666); //idx irrelevant
+		cin >> n;
+
+		std::vector<Interval> intervals;
+		for(int i=0; i <= n; i++)
+		{	
+			cin >> a;
+			cin >> b;
+			Interval tmp_interval = Interval(a, b, i);
+			intervals.push_back(tmp_interval);
+		}
+
+		std::vector<int> res = cover(target, intervals);
+		if (res.size() == 0) cout << "impossible" << endl;
+		else cout << res.size() << endl; 
+
+		for (int idx: res)
+		{
+			cout << idx << " ";
+		}
+	}
+}
+
+
