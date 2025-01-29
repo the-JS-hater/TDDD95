@@ -7,6 +7,8 @@ using std::cin;
 using std::endl;
 using std::cout;
 using std::vector;
+using std::reverse;
+using std::max;
 
 
 struct Item {
@@ -18,57 +20,36 @@ struct Item {
 
 
 vector<int> knapsack(int capacity, vector<Item> items) {
-	// Input:
-	// Values (stored in array v)
-	// Weights (stored in array w)
-	// Number of distinct items (n)
-	// Knapsack capacity (W)
-	// NOTE: The array "v" and array "w" are assumed to store all relevant values starting at index 1.
-
-
-	vector<int> solution = {};
-
-	//array m[0..n, 0..W];
-	int matrix[items.size() + 1][items.size() + 1];
-	//for j from 0 to W do:
-	//    m[0, j] := 0
-	for (int i = 0; i <= capacity; i++){
-		matrix[0][i] = 0;
-	}
-
-	//for i from 1 to n do:
-	//    m[i, 0] := 0
-	for (int i = 1; i <= items.size(); i++){
-		matrix[i][0] = 0;
-	}
+	int m[items.size() + 1][capacity + 1];
 	
-	//for i from 1 to n do:
-	//    for j from 1 to W do:
-	//        if w[i] > j then:
-	//            m[i, j] := m[i-1, j]
-	//        else:
-	//            m[i, j] := max(m[i-1, j], m[i-1, j-w[i]] + v[i])
-	for (int i = 1; i < items.size(); i++){
-		for (int j = 1; j < capacity; j++){
-			if (matrix[i][j] > j){
-				matrix[i][j] = matrix[i - 1][j];
-			} else {
-				matrix[i][j] = std::max(matrix[i - 1][j], matrix[i - 1][j - items[i - 1].weight] + items[i - 1].value);
-			}
+	for (int j = 0; j <= capacity; j++) m[0][j] = 0;
+	for (int i = 0; i <= items.size(); i++) m[i][0] = 0;
+
+	for (int i = 1; i <= items.size(); i++)
+	{
+		for (int j = 1; j <= capacity; j++)
+		{
+			if (items[i-1].weight > j) m[i][j] = m[i-1][j];
+			else m[i][j] = max(
+					m[i-1][j],
+					m[i-1][j-items[i-1].weight] + items[i-1].value
+			);  
 		}
 	}
-	
+
 	int i = items.size();
 	int j = capacity;
-	while (i > 0 && j > 0){
-		if (matrix[i][j] != matrix[i - 1][j]){
-			solution.push_back(i);
-			j -= items[i].weight;
+	vector<int> idx_vec;
+	while (i > 0 && j > 0)
+	{
+		if (m[i][j] > m[i-1][j])
+		{
+			idx_vec.push_back(i - 1);
+			j -= items[i-1].weight;
 		}
-		i -= 1;
+		i--;
 	}
-
-	return solution;
+	return idx_vec;
 }
 
 
@@ -84,11 +65,9 @@ int main() {
 			items.push_back(Item(v, w));
 		}
 		vector<int> vec = knapsack(c, items);
+		reverse(vec.begin(), vec.end());
 		cout << vec.size() << endl;
-		for (int idx: vec)
-		{
-			cout << idx << " ";
-		}
+		for (int idx: vec) cout << idx << " ";
 		cout << endl;
 	}
 }
