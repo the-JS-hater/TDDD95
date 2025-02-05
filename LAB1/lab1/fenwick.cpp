@@ -10,17 +10,17 @@ using std::vector;
 using std::ios;
 
 
-int sum(long long const i, vector<long long> const& v)
+int sum(long long i, vector<long long> const& v)
 {
   long long sum = 0LL;
-  for (long long j {i-1LL}; j >= 0LL; j = (j & (j + 1LL)) - 1LL) sum += v[j];
+  for (; i > 0LL; i = (i & (i + 1LL)) - 1LL) sum += v[i];
   return sum;
 }
 
 
-void add(long long const i, long long const x, vector<long long>& v)
+void add(long long i, long long const x, vector<long long>& v)
 {
-  for (long long j {i}; j < (long long)v.size(); j = j | (j + 1LL)) v[j] += x;
+  for (; i < (long long)v.size(); i = i | (i + 1LL)) v[i] += x;
 }
 
 
