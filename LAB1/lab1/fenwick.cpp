@@ -11,9 +11,9 @@ using std::ios;
 
 
 int sum(long long i, vector<long long> const& v)
-{
-  long long sum = 0LL;
-  for (; i > 0LL; i = (i & (i + 1LL)) - 1LL) sum += v[i];
+{	
+	long long sum = 0LL;
+	for (; i >= 0LL; i = (i & (i + 1LL)) -1LL) sum += v[i];
   return sum;
 }
 
@@ -38,12 +38,12 @@ int main()
   long long op1, op2;
 
   for (long long i {0LL}; i < q; i++)
-  {
+  {	
     cin >> oper;
     switch(oper) {
       case '?': {
-        cin >> op1;
-        cout << sum(op1, v) << "\n";
+				cin >> op1;
+        cout << sum(op1 - 1, v) << "\n";
         break;
       };
       case '+': {
