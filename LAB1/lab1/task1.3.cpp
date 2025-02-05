@@ -1,57 +1,67 @@
-// https://en.wikipedia.org/wiki/Longest_increasing_subsequence
-
 #include <vector>
+#include <iostream>
+#include <cmath>
 
 
-std::vector<int> lis(std::vector<int> input){
-	// Memory complexity is O(3N) since it needs two additional arrays
-	int predIdx[input.size()];
-	int minEndIdx[input.size() + 1];
+using std::vector;
+using std::cin;
+using std::cout;
+using std::endl;
 
-	minEndIdx[0] = -1;
-	int longestSeqLen = 0;
-	
-	// Iterate over the entire input O(n)
-	for (int i = 0; i < input.size(); i++){
-		int lowerBound = 1;
-		int higherBound = longestSeqLen + 1;
-		
-		// Iterate over a subset of the input, which gets smaller
-		// each iteration, hence O(n log n), when combined with
-		// the outer for-loop
-		while (lowerBound < higherBound) {
-			int mid = lowerBound + int((higherBound- lowerBound)/2);
+const int INF = 1e9;
 
-			if (input[minEndIdx[mid]] >= input[i]){
-				higherBound = mid;
-			} else {
-				lowerBound = mid + 1;
+vector<int> lis(vector<int> v){
+	unsigned n = v.size();
+	vector<int> l(n + 1, INF); 
+	l[0] = -INF;
+	vector<int> p(n, -1);
+
+	for (unsigned i {0}; i < n; i++)
+	{
+		for (unsigned j {1}; j <= n; j++)
+		{
+			if (l[j - 1] < v[i] && v[i] < l[j]) {
+				l[j] = v[i];
+				p[i] = j;
 			}
 		}
+	}
 
-		int newLen = lowerBound;
-		predIdx[i] = minEndIdx[newLen - 1];
-		minEndIdx[newLen] = i;
-
-		if (newLen > longestSeqLen){
-			longestSeqLen = newLen;
+	int a = l[0];
+	int pos = 0;
+	for (unsigned i {1}; i < n; i++)
+	{
+		if (l[i] > a){
+			a = l[i];
+			pos = i;
 		}
 	}
 
-	int solution[longestSeqLen];
-	int i = minEndIdx[longestSeqLen];
-	
-	// Linear time complexity relative to the longest
-	// found increasing sequence. Not relevant for
-	// overall time complexity
-	for (int j = longestSeqLen - 1; j >= 0; j--) {
-		solution[j] = input[i];
-		i = predIdx[i];
+	vector<int> idx_l;
+	while (pos != -1)
+	{
+		idx_l.push_back(pos);
+    pos = p[pos];
 	}
-
-	// One would imagine converting between int[] and std::vec<int> would be simpler...
-	int solutionSize = sizeof(solution) / sizeof(solution[0]);
-	std::vector<int> convertedSolution(solution, solution + solutionSize);
 	
-	return convertedSolution;
+	return idx_l;
 }
+
+
+int main() {
+	int n;
+	while(cin >> n) 
+	{
+		vector<int> seq;
+		for (unsigned i {0}; i < n; i++)
+		{
+			cin >> n;
+			seq.push_back(n);
+		}
+		vector<int> res = lis(seq);
+		cout << res.size() << endl;
+		for (int e: res) cout << e << " ";
+		cout << endl;
+	}
+}
+

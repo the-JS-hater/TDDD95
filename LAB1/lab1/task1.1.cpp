@@ -7,6 +7,26 @@ using std::cout;
 using std::endl;
 
 
+/*
+ * Morgan Nordberg (morno368)
+ * Interval scheduling is about taking a revieving a target interval to be
+ * covered, and a set of available intervals, and returning the indices of the
+ * minimal set of intervals to cover the target.
+ *
+ * I have a struct for representing intervals, and a custom comparison function
+ * to use for std::sort. The overall algorithm is to sort the set of intervals
+ * by start time, and if equal, by end time. This makes it easier to then
+ * select intervals that start at or before our current leftmost target point
+ * (initially the start of the target interval) but with the latest possible
+ * end time to cover as much as possible. Since the list is ordered we never
+ * need to reevaluate intervals at lower indices than the one selecten, hence
+ * we never reevaluate the same intervals at the start. 
+ *
+ * Time complexity is O(n log n) for sorting, and then O(n) for selecting the
+ * intervals 
+ * */
+
+
 struct Interval {
 	double start;
 	double end;
@@ -27,6 +47,7 @@ bool cmp_intervals(const Interval& a, const Interval& b) {
 std::vector<int> cover(Interval interval, std::vector<Interval> intervals) {
 	std::vector<int> indices = {};
 	
+	//cpprefrence guarantees std::sort to be worst-case O(n log n) 
 	std::sort(intervals.begin(), intervals.end(), cmp_intervals);
 	
 	double current_right = interval.start;
