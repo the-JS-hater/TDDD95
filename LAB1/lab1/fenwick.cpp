@@ -10,18 +10,28 @@ using std::vector;
 using std::ios;
 
 
-int sum(long long i, vector<long long> const& v)
-{	
-	long long sum = 0LL;
-	for (; i >= 0LL; i = (i & (i + 1LL)) -1LL) sum += v[i];
-  return sum;
-}
+struct Fenwick {
+	vector<long long> v;
+	long long int n;
+	
+	Fenwick(long long int n) : v{vector<long long>(n, 0LL)}, n{n} {}
 
+	void add(long long int const i, long long int const x)
+	{
+		for (long long int j {i}; j < n; j = j | (j + 1LL)) v[j] += x;
+	}
 
-void add(long long i, long long const x, vector<long long>& v)
-{
-  for (; i < (long long)v.size(); i = i | (i + 1LL)) v[i] += x;
-}
+	long long sum(long long int const i)
+	{
+		long long sum = 0LL;
+		for (long long j {i}; j >= 0LL; j = (j & (j + 1LL)) -1LL) sum += v[j];
+		return sum;
+	}
+
+	void print() {for(auto e: v) cout << e << " "; cout << endl;}
+	
+	void printLen() {cout << "length: "<< n << endl;}
+};
 
 
 int main()
@@ -32,7 +42,7 @@ int main()
     
   long long n, q;
   cin >> n >> q;
-  std::vector<long long> v(n, 0LL);
+	Fenwick fw = Fenwick(n);
   
   char oper;
   long long op1, op2;
@@ -43,12 +53,12 @@ int main()
     switch(oper) {
       case '?': {
 				cin >> op1;
-        cout << sum(op1 - 1, v) << "\n";
+        cout << fw.sum(op1 - 1) << "\n";
         break;
       };
       case '+': {
         cin >> op1 >> op2;
-        add(op1, op2, v);
+        fw.add(op1, op2);
         break;
       }
     }
