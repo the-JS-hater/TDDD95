@@ -1,0 +1,6 @@
+A: 2.5 	(goal 13)
+B: 3 		(goal 7)
+C: 2		(goal 6)
+
+
+last updated: set3
