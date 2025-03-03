@@ -1,8 +1,20 @@
 /* Morno368 - Morgan Nordberg
- * TODO
- * - Time & Memory complexity
+ * 
+ * Memory complexity is O(N * M), where n is the the capacity and m is the
+ * number of items. Since we always construct a M*N matrix
+ *
+ * Time complexity is also O(N * M), since we will have to fill out the matrix
+ * values. Afterwards, backtracking through it to provide the actual indexes is
+ * trivial in complexity
+ *
+ * The algorithm works by creating a matrix with the capacity on one axis, and
+ * the other axis will repsent items chosen. We then for each capacity, up to
+ * the given maximum capacity, fill the rows with the optimal choice of items.
+ *
  * - Description of problem
- * - How it works
+ * We wanna pick the indexes of items, with given weights, such that we
+ * maximize the sum of the items given values, given a limited capacity of
+ * total weight we can accumulate
  * */
 
 
