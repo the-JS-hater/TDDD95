@@ -1,3 +1,12 @@
+/* Morno368 - Morgan Nordberg
+ * TODO
+ * - Time & Memory complexity
+ * - Description of problem
+ * - How it works
+ * */
+
+
+
 #include <vector>
 #include <iostream>
 #include <cmath>

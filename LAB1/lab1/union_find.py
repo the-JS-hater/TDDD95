@@ -1,3 +1,10 @@
+# Morno368 - Morgan Nordberg
+# TODO 
+# Memory & Time complexity
+# Description of problem
+# How it works
+
+
 class DSU:
     def __init__(self, n):
         self.parents = [i for i in range(n)]
