@@ -1,0 +1,20 @@
+e="Impossible"
+def f(s):
+    print(s)
+    if not s:
+        print("done!")
+        return 0
+    if s[0]!=s[-1]:
+        i=s[1:].find(s[-1])+1
+        print(f"swapping idx 0 with {i}")
+        if i<0:return e
+        s=s[i]+s[1:i]+s[0]+s[i+1:]
+        print(f"after swap: {s}")
+        t=f(s[1:-1])
+        if t==e:return e
+        return 1+t 
+    else: 
+        print("equal")
+        return f(s[1:-1])
+
+[print(f(s))for s in open(0).read().splitlines()[1:]]
