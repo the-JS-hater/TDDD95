@@ -1,8 +1,26 @@
 # Morno368 - Morgan Nordberg
-# TODO 
-# Memory & Time complexity
-# Description of problem
-# How it works
+# TODO documentation
+
+# maintains a colleciton of disjoint sets and supports the operations find(x),
+# which returns the root of the set containing x and union(x, y) which merges
+# the sets contating x and y. 
+
+# each set is stored as a rooted tree, where parents[i] points to the parent of
+# node i. roots point to themselves. size[i] stores the size of the tree that
+# is rooted at i
+
+# during union we make compare sizes to so that we merge the trees such that
+# the smaller set becomes a subtree of the larger, ensuring we maintain a tree
+# that's as shallow as possible. since the height of the tree affects the
+# complexity of the operations. during find, aat each step of the path we make
+# the node point ot the root, effectivley flattening the tree which again
+# maintains shallowness
+
+# find backtracks through the tree, and the tree will never have a height
+# larger than log n, so the time complexity find is at worst O(log n)
+
+# union simply calls find twixe, so since find is at worst log n, the time
+# complexity of union is also O(log n)
 
 
 class DSU:
