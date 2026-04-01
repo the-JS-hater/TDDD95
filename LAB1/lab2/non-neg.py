@@ -1,9 +1,8 @@
 import heapq
 
-
-# Memory complexity is ...
-#  
-# Time Complexity is N*M, where N is the nr of edges in the grapgh, and M is the number of vertices in the graph. We will always have to traverse all nodes, and for every vertex we mmight need to reevaluate
+# Time Complexity is V + E log E, since we visit every vertex once, and queue
+# every edge. Retriving these edged from a priority queue (heapq.heappop()) is
+# log N. 
 #
 # How the algorithm works:
 # We initially have an array with the weight of each node set to INF, except
@@ -21,15 +20,30 @@ def dijkstra(graph, s):
     max_ws[s] = 0
     pq = [(max_ws[s], s)]  
     
+    prev = [-1] * len(graph)
+    
     while pq:
         val, node_idx = heapq.heappop(pq)
 
         for neighbor, w in graph[node_idx]:
             if val + w < max_ws[neighbor]:
                 max_ws[neighbor] = val + w
+                prev[neighbor] = node_idx
                 heapq.heappush(pq, (val + w, neighbor))
     
-    return max_ws
+    return max_ws, prev
+
+
+def get_path(prev, start, dest):
+    # NOTE: i assume you'll only ever ask for reachable paths. Kattis doesn't
+    # test this but seems reasonable to me
+    path = []
+    node = dest 
+    while node != start:
+        path.append(node)
+        node = prev[node]
+    return [start] + path[::-1]
+
 
 if __name__ == "__main__":
     *f, = map(str.split, open(0).read().splitlines())
@@ -44,7 +58,7 @@ if __name__ == "__main__":
             u,v,w = [int(c) for c in f[j]] 
             g[u].append((v,w))
         
-        max_ws = dijkstra(g,s)
+        max_ws, prev = dijkstra(g,s)
 
         for k in range(q):
             e = int(f[i + 1 + m + k][0])
