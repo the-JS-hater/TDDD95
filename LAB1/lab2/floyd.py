@@ -11,13 +11,13 @@ def floyd(g):
             for j in range(len(g)):
                 if d[i][k] < float('inf') and d[k][j] < float('inf'):
                     d[i][j] = min(d[i][j], d[i][k] + d[k][j])
-    for k in range(n):
-        if d[k][k] < 0:
-            for i in range(n):
-                if d[i][k] != -float('inf'):
-                    for j in range(n):
-                        if d[k][j] != -float('inf'):
-                            d[i][j] = -float('inf')
+    # for k in range(n):
+    #     if d[k][k] < 0:
+    #         for i in range(n):
+    #             if d[i][k] != -float('inf'):
+    #                 for j in range(n):
+    #                     if d[k][j] != -float('inf'):
+    #                         d[i][j] = -float('inf')
     return p, d
 
 
