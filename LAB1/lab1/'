@@ -1,0 +1,43 @@
+def gauss(matrix, vec):
+    n = len(matrix)
+    row = 0
+    for col in range(n):
+        pivot = max(range(row,n), key=lambda i: abs(matrix[i][col]))
+        if not matrix[pivot][col]:
+            continue
+        matrix[row], matrix[pivot] = matrix[pivot], matrix[row]
+        pivot_val = matrix[row][col]
+        matrix[row] = [x / pivot_val for x in matrix[row]]
+        vec[row] /= pivot_val
+        for i in range(n):
+            if i == row:
+                continue
+            factor = matrix[i][col]
+            matrix[i] = [x - factor * y for x,y in zip(matrix[i], matrix[row])]
+            vec[i] -= factor * vec[row]
+        row += 1
+    
+    for i in range(n):
+        if all(abs(x) < 1e-9 for x in matrix[i]) and abs(vec[i]) > 1e-9:
+            return "inconsistent", []
+
+    pivot_cols = [-1] * n
+    for i in range(n):
+        for j in range(n):
+            if abs(matrix[i][j] - 1) < 1e-9:
+                pivot_cols[j] = i
+                break
+    free_vars = [j for j in range(n) if pivot_cols[j] == -1]
+    if free_vars:
+        return "multiple", []
+
+    solution = [vec[pivot_cols[i]] for i in range(n)] 
+    return "", solution
+
+
+if __name__ == "__main__":
+    *input, = map(float, map(str.split(), open(0).readlines()))
+    i = 0:
+    while i < len(input):
+        n = input[i]
+        matrix = [input[j] for j in range(i+1, i + 1 + n)]

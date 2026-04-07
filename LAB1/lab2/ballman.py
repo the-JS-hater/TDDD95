@@ -1,5 +1,4 @@
 def bellman(e, v, n):
-    # TODO: too slow, for some reason
     d = [float('inf')] * n 
     d[v] = 0
     p = [-1] * n
@@ -9,16 +8,19 @@ def bellman(e, v, n):
                 if d[v] > d[u] + w:
                     d[v] = max(-float('inf'), d[u]+w)
                     p[v] = u
-
-    neg = [False] * n
-    for _ in range(n):
-        for u, v, w in e:
-            if d[u] != float('inf') and d[v] > d[u] + w:
-                d[v] = -float('inf')
-                neg[v] = True
-            if neg[u]:
-                neg[v] = True
+    
+    x = -1
+    for u,v,w in e:
+        if d[u] < float('inf'):
+            if d[v] > d[u] + w:
+                d[v] = max(-float('inf'), d[u]+w)
+                p[v] = u
+                x = v
+    if x != -1: 
+        # make sure the appropriate indices of d are -float('inf')
+        pass
     return p, d
+
 
 
 def get_path(p, v):
