@@ -1,5 +1,22 @@
 from collections import deque
 
+# Morgan Nordberg
+
+# In an directed weighted graph, find the maxmimum flow between the source node
+# and the sink node
+
+# Algorthm: Using BFS, find an augmenting path and then using the minimum
+# residual capacity along some edge of that path, add that amount of flow to
+# the path. repeat until no augmenting path can be found (BFS returns 0 as the
+# new flow value)
+
+# Complexity: every time we update the flow, atleast one edge becomes saturated
+# and if it reappears in a different augmenting path the distance to s will
+# increase, it can increase at most V nr. of times, where V is the number of
+# vertices (obvious, since it will be acyclic paths). Each time we find a
+# augmenting path, we do so by calling BFS which is O(N), where N would be the
+# nr. of edges in this case. So time complexity is O(V*E^2)
+
 
 def maxflow(adj, capacities, s, t):
     flow = 0
