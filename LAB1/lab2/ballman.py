@@ -2,14 +2,16 @@ def bellman(e, s, n, g):
     d = [float('inf')] * n 
     d[s] = 0
     p = [-1] * n
-    count = [0] * n
     for _ in range(n - 1):
+        changed = False
         for u,v,w in e:
-            if d[u] < float('inf'):
-                if d[v] > d[u] + w:
-                    d[v] = max(-float('inf'), d[u]+w)
-                    p[v] = u
-                    count[v] += 1
+            if d[u] < float('inf') and d[v] > d[u] + w:
+                changed = True            
+                d[v] = max(-float('inf'), d[u]+w)
+                p[v] = u
+        if not changed: break
+    
+
     for u, val in enumerate(count):
         if val >= n and d[u] != -float('inf'):
             cycle = bfs(u, g)

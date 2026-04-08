@@ -1,24 +1,40 @@
 def floyd(g):
     d = [[float('inf')] * len(g) for _ in range(len(g))]
     p = []
+    
     for i, e_set in enumerate(g):
         d[i][i] = 0
         for e in e_set:
             j,w = e
             d[i][j] = min(d[i][j], w)
+    
     for k in range(len(g)):
         for i in range(len(g)):
             for j in range(len(g)):
                 if d[i][k] < float('inf') and d[k][j] < float('inf'):
                     d[i][j] = min(d[i][j], d[i][k] + d[k][j])
-    # for k in range(n):
-    #     if d[k][k] < 0:
-    #         for i in range(n):
-    #             if d[i][k] != -float('inf'):
-    #                 for j in range(n):
-    #                     if d[k][j] != -float('inf'):
-    #                         d[i][j] = -float('inf')
+    
+    for k in range(len(g)):
+        if d[k][k] < 0:
+            for i in range(len(g)):
+                if d[i][k] == float('inf'): continue
+                for j in range(len(g)):
+                    if d[k][j] == float('inf'): continue
+                    d[i][j] = -float('inf')
+
     return p, d
+
+
+def get_path(p, v):
+    # NOTE: not tested by kattis, but included since lab assignment wants the
+    # ability to reconstruct the paths
+    path = []
+    cur = p[v]
+    print(p,v)
+    while cur != -1:
+        path += [cur]
+        cur  =  p[cur]
+    return path[::-1]
 
 
 if __name__ == "__main__":
