@@ -1,3 +1,25 @@
+# Morgan Nordberg
+
+# Problem: build a data structure that stores all suffixes of a string in
+# sorted order
+
+# Algorithm: we sort the cyclic shifts of a string because if we append a char
+# that strictly smaller than all others in the string to it, the sorted cyclic
+# shifts will match the sorted suffixes 
+
+# We iterate over substring lengths 1, 2, 4, 8, ... and maintain an array of
+# equivalence classes for each position. instead of doing string comaprison on
+# substrings we reuse results from the previous iteration and compare the
+# equivalence classes of the substring separate halves. So instead string
+# comparison we get comparing pairs of integers. the values of these integers
+# is also bounded by the number of characters in the alphabet. So we can sort
+# them using radix sort
+
+# Time complexity: each iteration takes O(n) time (radix sort), and we do O(log
+# n) iterations as the substring length doubles each time. so time complexity
+# is O(n log n).
+
+
 def sort_cyclic_shifts(s):
     n = len(s)
     ALPHABET = 256
@@ -7,8 +29,10 @@ def sort_cyclic_shifts(s):
     for ch in s: cnt[ord(ch)] += 1
     for i in range(1, ALPHABET): cnt[i] += cnt[i-1]
     for i, ch in enumerate(s):
-        p[cnt[ord(ch)]-1] = i
-        cnt[ord(ch)] -= 1
+        idx = ord(ch)
+        cnt[idx] -= 1
+        p[cnt[idx]] = i
+    c[p[0]] = 0
     classes = 1
     for i in range(1, n):
         if s[p[i]] != s[p[i-1]]:
@@ -42,7 +66,9 @@ def sort_cyclic_shifts(s):
 class suffix_arr():
     def __init__(self, s):
         self.s = s
-        self.sorted_suffs = sort_cyclic_shifts(s + '$')[1:]
+        # chr(0) because '$' < ' ' so strings with spaces break ordering
+        # otherwise. This alone has wasted hours of my precious time on earth
+        self.sorted_suffs = sort_cyclic_shifts(s + chr(0))[1:]  
 
     def get_suffix(self, i):
         return self.sorted_suffs[i]
@@ -54,7 +80,5 @@ if __name__ == "__main__":
         s, qs = input[i].strip(), map(int, input[i+1].split())
         s_arr = suffix_arr(s)
         for q in qs:
-            print(f"input:\nstring: {s}\nqueires: {list(qs)}")
-            print(f"s_arr.sorted_suffs = {s_arr.sorted_suffs}")
             out = [s_arr.get_suffix(q) for q in qs]
             print(*out)
